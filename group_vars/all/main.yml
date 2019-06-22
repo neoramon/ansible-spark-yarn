@@ -1,0 +1,27 @@
+---
+
+timezone: America/Sao_Paulo 
+
+java_home: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.201.b09-0.amzn2.x86_64
+
+sys_user: ec2-user
+sys_group: ec2-user
+
+hadoop_version: 3.1.2
+hadoop_download_url: https://www-us.apache.org/dist/hadoop/common/hadoop-3.1.2/hadoop-3.1.2.tar.gz
+hadoop_home: /opt/hadoop
+hadoop_tmp_dir: /data/tmp
+node_memory: 14336
+node_max_memory_allocation: 3456 
+
+scala_version: 2.12.8
+scala_download_url: https://downloads.lightbend.com/scala/2.12.8/scala-2.12.8.tgz
+scala_home: /opt/scala
+
+spark_master_host: yarn-resource-manager-dns
+
+spark_version: 2.4.3
+spark_download_url: https://archive.apache.org/dist/spark/spark-2.4.3/spark-2.4.3-bin-without-hadoop-scala-2.12.tgz
+spark_home: /opt/spark
+spark_memory: 3072M
+spark_cores: 1

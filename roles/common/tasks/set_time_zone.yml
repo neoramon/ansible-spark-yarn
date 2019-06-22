@@ -1,0 +1,11 @@
+- name: set timezone
+  copy:
+    content: "ZONE=\"{{ timezone }}\"\nUTC=true\n"
+    dest: /etc/sysconfig/clock
+
+- name: Create symbolic link 
+  file:
+    src: "/usr/share/zoneinfo/{{ timezone }}"
+    dest: "/etc/localtime"
+    force: yes
+    state: link

@@ -1,0 +1,16 @@
+---
+
+- hosts: resource-manager
+  become: yes
+  become_method: sudo
+  strategy: free
+
+  vars:
+    ami_profile: test
+
+  roles:
+  - common
+  - java
+  - scala
+  - hadoop
+  - spark

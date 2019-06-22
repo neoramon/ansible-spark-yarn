@@ -1,0 +1,15 @@
+---
+- name: install OpenJDK Java 8
+  yum: 
+    name: [java-1.8.0-openjdk-devel.x86_64]
+    state: latest
+
+- name: Env
+  template: 
+    src: etc/profile.d/java.sh
+    dest: /etc/profile.d/java.sh
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "u=rwx,g=rx,o=rx"
+  tags:
+    - env

@@ -1,0 +1,49 @@
+#    1  nano ~/.ssh/id_rsa
+#    2  chmod 400 ~/.ssh/id_rsa
+#    3  ifconfig
+#    4  sudo hostnamectl set-hostname //GET PRIVATE IP
+#    5  yarn --workers --daemon start  nodemanager
+#    6  exit
+#    7  yarn --workers --daemon start  nodemanager
+---
+- name: Download
+  get_url:
+    url: "{{ spark_download_url }}"
+    dest: /tmp/spark-{{ spark_version }}.tgz
+
+- name: Unpack
+  unarchive:
+    src: /tmp/spark-{{ spark_version }}.tgz
+    dest: /opt
+    owner: "{{ sys_user }}"
+    remote_src: yes
+
+- name: Create symbolic link 
+  file:
+    src: "/opt/spark-2.4.3-bin-without-hadoop-scala-2.12"
+    dest: "{{ spark_home }}"
+    force: yes
+    state: link
+
+- name: Config
+  template:
+    src: "{{ item.src }}"
+    dest: "/opt/spark/conf/{{ item.path }}"
+    force: yes
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+  with_filetree: templates/opt/spark/conf/
+  tags:
+    - config
+    - spark-config
+
+- name: Env
+  template: 
+    src: etc/profile.d/spark.sh
+    dest: /etc/profile.d/spark.sh
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "u=rwx,g=rx,o=rx"
+  tags:
+    - env
+    - spark-env

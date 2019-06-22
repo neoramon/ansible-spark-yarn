@@ -1,0 +1,58 @@
+# https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-common/core-default.xml
+# https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml
+# https://hadoop.apache.org/docs/r3.2.0/hadoop-yarn/hadoop-yarn-common/yarn-default.xml
+---
+- name: Download
+  get_url:
+    url: "{{ hadoop_download_url }}"
+    dest: /tmp/hadoop-{{ hadoop_version }}.tgz
+
+- name: Unpack
+  unarchive:
+    src: /tmp/hadoop-{{ hadoop_version }}.tgz
+    dest: /opt
+    owner: "{{ sys_user }}"
+    remote_src: yes
+
+- name: Create data dfs dir
+  file:
+    path: "{{ hadoop_tmp_dir }}"
+    state: directory
+    owner: "{{ sys_user }}"
+
+- name: Create symbolic link 
+  file:
+    src: "{{ hadoop_home }}-{{ hadoop_version }}"
+    dest: "{{ hadoop_home }}"
+    force: yes
+    state: link
+
+- name: Config
+  template:
+    src: "{{ item.src }}"
+    dest: "/opt/hadoop/etc/hadoop/{{ item.path }}"
+    force: yes
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+  with_filetree: templates/opt/hadoop/etc/hadoop/
+  tags:
+    - config
+    - hadoop-config
+
+- name: Env
+  template: 
+    src: etc/profile.d/hadoop.sh
+    dest: /etc/profile.d/hadoop.sh
+    owner: "{{ sys_user }}"
+    group: "{{ sys_group }}"
+    mode: "u=rwx,g=rx,o=rx"
+  tags:
+    - env
+
+#- name: Format namenode
+#  command: "hadoop namenode -format"
+#  become_user: "{{ sys_user }}"
+
+#- name: Format datanode
+#  command: "hadoop datanode -format"
+#  become_user: "{{ sys_user }}"

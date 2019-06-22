@@ -1,0 +1,10 @@
+- name: Install essentials
+  yum: 
+    pkg: [wget, tar, gzip, python-pip, tzdata, telnet]
+    state: installed
+    update_cache: yes
+
+- name: Install pip packages
+  pip: 
+    name: [numpy, pandas, numexpr]
+    state: latest
